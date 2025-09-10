@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}{{ episode.title }} - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="episode-detail">
+        <div class="episode-header">
+            <img src="{{ episode.image_url }}" alt="{{ episode.title }}" class="episode-image">
+            
+            <div class="episode-info">
+                <h2>{{ episode.title }}</h2>
+                
+                <div class="episode-meta">
+                    <span class="episode-date">{{ episode.publish_date }}</span>
+                    <span class="episode-duration">{{ episode.duration }}</span>
+                    <span class="episode-number">Episode {{ episode.episode_number }}</span>
+                </div>
+                
+                <p class="episode-description">{{ episode.description }}</p>
+                
+                <div class="episode-player">
+                    <audio controls>
+                        <source src="{{ episode.audio_url }}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                
+                <div class="episode-actions">
+                    <a href="{{ episode.audio_url }}" download class="btn btn-primary">
+                        <ion-icon name="download-outline"></ion-icon>
+                        <span>Download</span>
+                    </a>
+                    
+                    <div class="share-buttons">
+                        <a href="#" class="social-link"><ion-icon name="logo-facebook"></ion-icon></a>
+                        <a href="#" class="social-link"><ion-icon name="logo-twitter"></ion-icon></a>
+                        <a href="#" class="social-link"><ion-icon name="link-outline"></ion-icon></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="episode-content">
+            <h3>Episode Notes</h3>
+            <p>Detailed notes and resources mentioned in this episode will be available soon.</p>
+            
+            <h3>Transcript</h3>
+            <p>The transcript for this episode is being prepared and will be available shortly.</p>
+        </div>
+    </section>
+</article>
+{% endblock %}

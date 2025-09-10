@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Blog - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Blog</h2>
+            
+            <p class="hero-text">
+                Dive deeper into the topics we discuss on our podcast with our blog articles, behind-the-scenes content, and industry insights.
+            </p>
+        </div>
+    </section>
+
+    <section class="blog-posts">
+        {% for post in blog_posts %}
+        <article class="blog-post">
+            <div class="post-image">
+                <img src="{{ post.image }}" alt="{{ post.title }}">
+            </div>
+            
+            <div class="post-content">
+                <h3>{{ post.title }}</h3>
+                <div class="post-meta">
+                    <span class="post-date">{{ post.publish_date }}</span>
+                    <span class="post-author">By {{ post.author }}</span>
+                </div>
+                <p class="post-excerpt">{{ post.excerpt }}</p>
+                <a href="#" class="read-more">Read More</a>
+            </div>
+        </article>
+        {% endfor %}
+    </section>
+</article>
+{% endblock %}

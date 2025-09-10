@@ -1,0 +1,69 @@
+<!-- admin_messages.html -->
+{% extends "base.html" %}
+
+{% block title %}Message Management - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Message Management</h2>
+            
+            <p class="hero-text">
+                Manage contact messages from your website visitors.
+            </p>
+        </div>
+    </section>
+
+    <section class="admin-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="admin-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in messages %}
+                    <tr class="{{ 'unread' if not message.is_read }}">
+                        <td>{{ message.name }}</td>
+                        <td>{{ message.email }}</td>
+                        <td>{{ message.subject }}</td>
+                        <td>{{ message.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <span class="status-badge {{ 'read' if message.is_read else 'unread' }}">
+                                {{ 'Read' if message.is_read else 'Unread' }}
+                            </span>
+                        </td>
+                        <td class="actions">
+                            <a href="{{ url_for('admin_view_message', message_id=message.id) }}" class="btn btn-sm">View</a>
+                            <a href="{{ url_for('admin_toggle_message_read', message_id=message.id) }}" class="btn btn-sm">
+                                {{ 'Mark Unread' if message.is_read else 'Mark Read' }}
+                            </a>
+                            <a href="{{ url_for('admin_delete_message', message_id=message.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this message?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">No messages found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</article>
+{% endblock %}

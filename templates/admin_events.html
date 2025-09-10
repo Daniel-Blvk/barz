@@ -1,0 +1,60 @@
+<!-- admin_events.html -->
+{% extends "base.html" %}
+
+{% block title %}Event Management - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Event Management</h2>
+            
+            <p class="hero-text">
+                Manage your events from this dashboard.
+            </p>
+            
+            <a href="{{ url_for('admin_new_event') }}" class="btn btn-primary">Add New Event</a>
+        </div>
+    </section>
+
+    <section class="admin-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="admin-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Event Date</th>
+                        <th>Location</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                    <tr>
+                        <td>{{ event.title }}</td>
+                        <td>{{ event.event_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ event.location }}</td>
+                        <td class="actions">
+                            <a href="{{ url_for('admin_edit_event', event_id=event.id) }}" class="btn btn-sm">Edit</a>
+                            <a href="{{ url_for('admin_delete_event', event_id=event.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this event?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">No events found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</article>
+{% endblock %}

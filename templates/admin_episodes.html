@@ -1,0 +1,101 @@
+<!-- admin_episodes.html -->
+{% extends "base.html" %}
+
+{% block title %}Episode Management - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Episode Management</h2>
+            
+            <p class="hero-text">
+                Manage your podcast episodes from this dashboard.
+            </p>
+            
+            <div class="hero-btn-group">
+                <a href="{{ url_for('admin_new_episode') }}" class="btn btn-primary">Add New Episode</a>
+                <a href="{{ url_for('admin_new_upcoming') }}" class="btn btn-secondary">Add Upcoming Episode</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="admin-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <h3>Published Episodes</h3>
+        <div class="admin-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Episode #</th>
+                        <th>Title</th>
+                        <th>Publish Date</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for episode in episodes %}
+                    <tr>
+                        <td>{{ episode.episode_number }}</td>
+                        <td>{{ episode.title }}</td>
+                        <td>{{ episode.publish_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ episode.duration }}</td>
+                        <td>
+                            <span class="status-badge {{ 'published' if episode.is_published else 'draft' }}">
+                                {{ 'Published' if episode.is_published else 'Draft' }}
+                            </span>
+                        </td>
+                        <td class="actions">
+                            <a href="{{ url_for('admin_edit_episode', episode_id=episode.id) }}" class="btn btn-sm">Edit</a>
+                            <a href="{{ url_for('admin_delete_episode', episode_id=episode.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this episode?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">No episodes found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <h3>Upcoming Episodes</h3>
+        <div class="admin-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Scheduled Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for upcoming in upcoming_episodes %}
+                    <tr>
+                        <td>{{ upcoming.title }}</td>
+                        <td>{{ upcoming.scheduled_date.strftime('%Y-%m-%d') }}</td>
+                        <td class="actions">
+                            <a href="{{ url_for('admin_edit_upcoming', upcoming_id=upcoming.id) }}" class="btn btn-sm">Edit</a>
+                            <a href="{{ url_for('admin_delete_upcoming', upcoming_id=upcoming.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this upcoming episode?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">No upcoming episodes found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</article>
+{% endblock %}

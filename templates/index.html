@@ -1,0 +1,184 @@
+<!-- index.html updates -->
+{% extends "base.html" %}
+
+{% block content %}
+<article class="container">
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <img src="https://i.postimg.cc/4dCXsrMS/hero-title.png" alt="Podcast" class="hero-title">
+
+             <p class="hero-text">
+                <b>listen in to the besT of 125. NGANYA_CITY</b> 125.
+            </p> 
+
+            <!-- Display homepage videos if available -->
+            {% if homepage_videos %}
+            <div class="hero-videos">
+                <h3>Featured Videos</h3>
+                <div class="video-grid">
+                    {% for video in homepage_videos %}
+                    <div class="video-item">
+                        <iframe width="100%" height="200" src="{{ video.video_url }}" frameborder="0" allowfullscreen></iframe>
+                        <h4>{{ video.title }}</h4>
+                        {% if video.description %}
+                        <p>{{ video.description }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="hero-btn-group">
+                <button class="btn btn-primary">
+                    <ion-icon name="headset"></ion-icon>
+                    <span>Listen Now</span>
+                </button>
+
+                <div class="btn-link-wrapper">
+                    <p class="btn-title">Subscribe on:</p>
+
+                    <a href="{{ social_links.apple_podcasts }}" class="btn-link">
+                        <ion-icon name="logo-apple"></ion-icon>
+                        <span>Apple Music</span>
+                    </a>
+
+                    <a href="{{ social_links.soundcloud }}" class="btn-link">
+                        <ion-icon name="logo-soundcloud"></ion-icon>
+                        <span>SoundCloud</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-banner"></div>
+    </section>
+
+    <!-- Upcoming Episodes Section -->
+    {% if upcoming_episodes %}
+    <section class="upcoming-episodes">
+        <h2>Upcoming Episodes</h2>
+        <div class="upcoming-grid">
+            {% for episode in upcoming_episodes %}
+            <div class="upcoming-card">
+                <img src="{{ episode.image_url }}" alt="{{ episode.title }}">
+                <div class="upcoming-content">
+                    <h3>{{ episode.title }}</h3>
+                    <p>{{ episode.description|truncate(150) }}</p>
+                    <div class="upcoming-date">
+                        <ion-icon name="calendar-outline"></ion-icon>
+                        <span>{{ episode.scheduled_date.strftime('%B %d, %Y') }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Podcast Episodes Section -->
+    <section class="podcast" id="podcast">
+        <h2>Latest Episodes</h2>
+        <ul class="podcast-list">
+            {% for episode in episodes %}
+            <li>
+                <a href="{{ url_for('episode_detail', episode_id=episode.id) }}" class="podcast-card">
+                    <figure class="card-banner">
+                        <img src="{{ episode.image_url }}" alt="{{ episode.title }}">
+
+                        <div class="card-banner-icon">
+                            <ion-icon name="play"></ion-icon>
+                        </div>
+                    </figure>
+
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <time datetime="{{ episode.publish_date }}">{{ episode.publish_date.strftime('%Y-%m-%d') }}</time>
+                            <p class="pod-epi">Episode: {{ episode.episode_number }}</p>
+                        </div>
+
+                        <h3 class="h3 card-title">{{ episode.title }}</h3>
+                        <p class="card-description">{{ episode.description|truncate(100) }}</p>
+                    </div>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <!-- Blog Posts Section -->
+    {% if blog_posts %}
+    <section class="blog-preview">
+        <h2>Latest Blog Posts</h2>
+        <div class="blog-grid">
+            {% for post in blog_posts %}
+            <article class="blog-card">
+                <div class="blog-image">
+                    <img src="{{ post.image }}" alt="{{ post.title }}">
+                </div>
+                
+                <div class="blog-content">
+                    <h3>{{ post.title }}</h3>
+                    <div class="blog-meta">
+                        <span class="blog-date">{{ post.publish_date.strftime('%B %d, %Y') }}</span>
+                        <span class="blog-author">By {{ post.author }}</span>
+                    </div>
+                    <p class="blog-excerpt">{{ post.excerpt|truncate(150) }}</p>
+                    <a href="{{ url_for('blog_post', post_id=post.id) }}" class="read-more">Read More</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        <div class="text-center">
+            <a href="{{ url_for('blog') }}" class="btn btn-secondary">View All Posts</a>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Events Section -->
+    {% if events %}
+    <section class="events-preview">
+        <h2>Recent Events</h2>
+        <div class="events-grid">
+            {% for event in events %}
+            <div class="event-card">
+                <img src="{{ event.image_url }}" alt="{{ event.title }}">
+                <div class="event-content">
+                    <h3>{{ event.title }}</h3>
+                    <div class="event-meta">
+                        <span class="event-date">
+                            <ion-icon name="calendar-outline"></ion-icon>
+                            {{ event.event_date.strftime('%B %d, %Y') }}
+                        </span>
+                        <span class="event-location">
+                            <ion-icon name="location-outline"></ion-icon>
+                            {{ event.location }}
+                        </span>
+                    </div>
+                    <p>{{ event.description|truncate(100) }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center">
+            <a href="{{ url_for('events') }}" class="btn btn-secondary">View All Events</a>
+        </div>
+    </section>
+    {% endif %}
+
+    <section class="newsletter">
+        <div class="newsletter-card">
+            <div class="card-content">
+                <h3 class="h3 card-title">Sign up for our Newsletter. It's free!</h3>
+
+                <p class="card-text">Stay in the loop with our latest episodes, exclusive content, and special guest announcements. Get weekly updates delivered straight to your inbox and never miss a beat!</p>
+            </div>
+
+            <form action="" class="card-form" data-form>
+                <input type="email" name="email_address" placeholder="Your email address" required class="input-field" data-input>
+                <button type="submit" class="btn btn-primary" disabled data-submit>Subscribe</button>
+            </form>
+        </div>
+    </section>
+</article>
+{% endblock %}

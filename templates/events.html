@@ -1,0 +1,48 @@
+<!-- events.html -->
+{% extends "base.html" %}
+
+{% block title %}Events - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Events</h2>
+            
+            <p class="hero-text">
+                Check out our past and upcoming events where we connect with our community.
+            </p>
+        </div>
+    </section>
+
+    <section class="events">
+        {% if events %}
+        <div class="events-grid">
+            {% for event in events %}
+            <div class="event-card">
+                <img src="{{ event.image_url }}" alt="{{ event.title }}">
+                <div class="event-content">
+                    <h3>{{ event.title }}</h3>
+                    <div class="event-meta">
+                        <span class="event-date">
+                            <ion-icon name="calendar-outline"></ion-icon>
+                            {{ event.event_date.strftime('%B %d, %Y') }}
+                        </span>
+                        <span class="event-location">
+                            <ion-icon name="location-outline"></ion-icon>
+                            {{ event.location }}
+                        </span>
+                    </div>
+                    <p>{{ event.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center">
+            <p>No events found.</p>
+        </div>
+        {% endif %}
+    </section>
+</article>
+{% endblock %}

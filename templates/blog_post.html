@@ -1,0 +1,42 @@
+<!-- blog_post.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="blog-post-detail">
+        <div class="post-header">
+            <img src="{{ post.image }}" alt="{{ post.title }}" class="post-image">
+            
+            <div class="post-info">
+                <h1>{{ post.title }}</h1>
+                
+                <div class="post-meta">
+                    <span class="post-date">{{ post.publish_date.strftime('%B %d, %Y') }}</span>
+                    <span class="post-author">By {{ post.author }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="post-content">
+            <div class="post-excerpt">
+                <p>{{ post.excerpt }}</p>
+            </div>
+            
+            <div class="post-body">
+                {{ post.content|safe }}
+            </div>
+            
+            <div class="post-share">
+                <h3>Share this post:</h3>
+                <div class="share-buttons">
+                    <a href="#" class="social-link"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="#" class="social-link"><ion-icon name="logo-twitter"></ion-icon></a>
+                    <a href="#" class="social-link"><ion-icon name="link-outline"></ion-icon></a>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>
+{% endblock %}

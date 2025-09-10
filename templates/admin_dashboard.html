@@ -1,0 +1,307 @@
+<!-- admin_dashboard.html -->
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Admin Dashboard</h2>
+            
+            <p class="hero-text">
+                Welcome, {{ session.admin_username }}! Manage your podcast from here.
+            </p>
+            
+            <!-- Admin header with quick logout -->
+            <div class="admin-header">
+                <span class="admin-status">Logged in as: <strong>{{ session.admin_username }}</strong></span>
+                <a href="{{ url_for('admin_logout') }}" class="btn btn-secondary btn-small">
+                    <ion-icon name="log-out-outline"></ion-icon>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="dashboard">
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <p class="stat-number">{{ user_count }}</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Total Messages</h3>
+                <p class="stat-number">{{ message_count }}</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Blog Posts</h3>
+                <p class="stat-number">{{ blog_count }}</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Episodes</h3>
+                <p class="stat-number">{{ episode_count }}</p>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h3>Quick Actions</h3>
+            <div class="action-buttons">
+                <a href="{{ url_for('admin_blog') }}" class="btn btn-primary">Manage Blog</a>
+                <a href="{{ url_for('admin_episodes') }}" class="btn btn-primary">Manage Episodes</a>
+                <a href="{{ url_for('admin_events') }}" class="btn btn-primary">Manage Events</a>
+                <a href="{{ url_for('admin_videos') }}" class="btn btn-primary">Manage Videos</a>
+                <a href="{{ url_for('admin_messages') }}" class="btn btn-primary">View Messages</a>
+            </div>
+        </div>
+        
+        <!-- Recent Messages -->
+        <div class="recent-messages">
+            <h3>Recent Messages</h3>
+            
+            {% if recent_messages %}
+                <div class="message-list">
+                    {% for message in recent_messages %}
+                    <div class="message-card {% if not message.is_read %}unread{% endif %}">
+                        <div class="message-header">
+                            <h4>{{ message.subject }}</h4>
+                            <div class="message-meta">
+                                <span class="message-sender">{{ message.name }} ({{ message.email }})</span>
+                                <span class="message-date">{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="message-details">
+                            <p>{{ message.message|truncate(150) }}</p>
+                            <div class="message-actions">
+                                <a href="{{ url_for('admin_messages') }}#message-{{ message.id }}" class="btn btn-small">View Details</a>
+                                {% if not message.is_read %}
+                                <span class="badge">New</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No messages yet.</p>
+            {% endif %}
+        </div>
+        
+        <!-- Admin Navigation -->
+        <div class="admin-navigation">
+            <h3>Content Management</h3>
+            <div class="nav-grid">
+                <div class="nav-section">
+                    <h4>Blog</h4>
+                    <a href="{{ url_for('admin_blog') }}" class="nav-link">View All Posts</a>
+                    <a href="{{ url_for('admin_new_blog') }}" class="nav-link">Create New Post</a>
+                </div>
+                
+                <div class="nav-section">
+                    <h4>Podcast</h4>
+                    <a href="{{ url_for('admin_episodes') }}" class="nav-link">View All Episodes</a>
+                    <a href="{{ url_for('admin_new_episode') }}" class="nav-link">Create New Episode</a>
+                    <a href="{{ url_for('admin_new_upcoming') }}" class="nav-link">Add Upcoming Episode</a>
+                </div>
+                
+                <div class="nav-section">
+                    <h4>Events</h4>
+                    <a href="{{ url_for('admin_events') }}" class="nav-link">View All Events</a>
+                    <a href="{{ url_for('admin_new_event') }}" class="nav-link">Create New Event</a>
+                </div>
+                
+                <div class="nav-section">
+                    <h4>Media</h4>
+                    <a href="{{ url_for('admin_videos') }}" class="nav-link">Manage Videos</a>
+                    <a href="{{ url_for('admin_new_video') }}" class="nav-link">Add New Video</a>
+                </div>
+                
+                <div class="nav-section">
+                    <h4>Communication</h4>
+                    <a href="{{ url_for('admin_messages') }}" class="nav-link">View Messages ({{ message_count }})</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="admin-actions">
+            <a href="{{ url_for('admin_logout') }}" class="btn btn-secondary">
+                <ion-icon name="log-out-outline"></ion-icon>
+                Logout
+            </a>
+        </div>
+    </section>
+</article>
+
+<style>
+    .admin-table table{
+        color:black
+    }
+    .recent-messages {
+        color:black;
+    }
+    
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+        border-left: 4px solid #28a745;
+    }
+    
+    .admin-status {
+        color: #495057;
+        font-size: 0.9rem;
+    }
+    
+    .btn-small {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: #f8f9fa;
+    color:black;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    border-left: 4px solid #007bff;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #007bff;
+    margin: 0.5rem 0 0 0;
+}
+
+.quick-actions {
+    margin-bottom: 2rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.message-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.message-card {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #6c757d;
+}
+
+.message-card.unread {
+    border-left-color: #007bff;
+    background: #e3f2fd;
+    color:black;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.message-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+}
+
+.message-sender {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.message-date {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.message-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.badge {
+    background: #dc3545;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.admin-navigation {
+    margin: 2rem 0;
+}
+
+.nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.nav-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.nav-section h4 {
+    margin-top: 0;
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.nav-link {
+    display: block;
+    padding: 0.5rem;
+    color: #495057;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.nav-link:hover {
+    background: #e9ecef;
+    color: #007bff;
+}
+
+.admin-actions {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+    text-align: center;
+}
+</style>
+{% endblock %}

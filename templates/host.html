@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Host - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Meet Our Hosts</h2>
+            
+            <p class="hero-text">
+                Our talented hosts bring diverse perspectives and expertise to each episode, creating engaging conversations that inform and inspire our listeners.
+            </p>
+        </div>
+    </section>
+
+    <section class="hosts">
+        {% for host in hosts %}
+        <div class="host-card">
+            <div class="host-image">
+                <img src="{{ host.image }}" alt="{{ host.name }}">
+            </div>
+            
+            <div class="host-info">
+                <h3>{{ host.name }}</h3>
+                <p class="host-role">{{ host.role }}</p>
+                <p class="host-bio">{{ host.bio }}</p>
+                
+                <div class="host-social">
+                    <a href="{{ host.social_media.twitter }}" class="social-link"><ion-icon name="logo-twitter"></ion-icon></a>
+                    <a href="{{ host.social_media.instagram }}" class="social-link"><ion-icon name="logo-instagram"></ion-icon></a>
+                    <a href="{{ host.social_media.linkedin }}" class="social-link"><ion-icon name="logo-linkedin"></ion-icon></a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+</article>
+{% endblock %}

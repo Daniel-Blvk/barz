@@ -1,0 +1,61 @@
+<!-- admin_event_form.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit' if event else 'New' }} Event - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">{{ 'Edit' if event else 'New' }} Event</h2>
+            
+            <p class="hero-text">
+                {{ 'Edit' if event else 'Create' }} an event.
+            </p>
+        </div>
+    </section>
+
+    <section class="admin-form">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('admin_new_event') if not event else url_for('admin_edit_event', event_id=event.id) }}" enctype="multipart/form-data" style="color:black"> 
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" value="{{ event.title if event }}" required style="border:solid black">
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="5" required style="border:solid black"> {{ event.description if event }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="event_date">Event Date</label>
+                <input type="date" id="event_date" name="event_date" value="{{ event.event_date.strftime('%Y-%m-%d') if event else datetime.now().strftime('%Y-%m-%d') }}" required style="border:solid black">
+            </div>
+            
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" value="{{ event.location if event }}" required style="border:solid black">
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Event Image</label>
+                <input type="file" id="image" name="image" accept="image/*" {{ 'required' if not event }} style="border:solid black">
+                {% if event %}
+                    <p>Current image: <a href="{{ event.image_url }}" target="_blank">{{ event.image_url }}</a></p>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn btn-primary">{{ 'Update' if event else 'Create' }} Event</button>
+            <a href="{{ url_for('admin_events') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </section>
+</article>
+{% endblock %}

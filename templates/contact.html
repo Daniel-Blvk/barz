@@ -1,0 +1,82 @@
+<!-- contact.html updates -->
+{% extends "base.html" %}
+
+{% block title %}Contact - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Get In Touch</h2>
+            
+            <p class="hero-text">
+                We'd love to hear from you! Whether you have a question, suggestion, or want to be a guest on our show, reach out to us using the form below.
+            </p>
+            
+            {% if not session.user_id %}
+            <p class="hero-text">
+                <a href="{{ url_for('login') }}">Log in</a> or <a href="{{ url_for('register') }}">register</a> to have your messages associated with your account.
+            </p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="contact">
+        <div class="contact-info">
+            <h3>Contact Information</h3>
+            
+            <div class="contact-item">
+                <ion-icon name="mail-outline"></ion-icon>
+                <a href="mailto:{{ contact_info.email }}">{{ contact_info.email }}</a>
+            </div>
+            
+            <div class="contact-item">
+                <ion-icon name="call-outline"></ion-icon>
+                <a href="tel:{{ contact_info.phone }}">{{ contact_info.phone }}</a>
+            </div>
+            
+            <div class="contact-item">
+                <ion-icon name="call-outline"></ion-icon>
+                <a href="tel:{{ contact_info.phone2 }}">{{ contact_info.phone2 }}</a>
+            </div>
+            
+            <div class="contact-item">
+                <ion-icon name="location-outline"></ion-icon>
+                <span>{{ contact_info.address }}</span>
+            </div>
+        </div>
+        
+        <div class="contact-form">
+            <h3>Send us a Message</h3>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form action="{{ url_for('contact') }}" method="post">
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Your Name" value="{{ session.username if session.user_id }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Your Email" required>
+                </div>
+                
+                <div class="form-group">
+                    <input type="text" name="subject" placeholder="Subject" required>
+                </div>
+                
+                <div class="form-group">
+                    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </section>
+</article>
+{% endblock %}

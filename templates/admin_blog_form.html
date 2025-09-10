@@ -1,0 +1,71 @@
+<!-- admin_blog_form.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit' if post else 'New' }} Blog Post - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">{{ 'Edit' if post else 'New' }} Blog Post</h2>
+            
+            <p class="hero-text">
+                {{ 'Edit' if post else 'Create' }} a blog post for your podcast website.
+            </p>
+        </div>
+    </section>
+
+    <section class="admin-form">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('admin_new_blog') if not post else url_for('admin_edit_blog', post_id=post.id) }}" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" value="{{ post.title if post }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="excerpt">Excerpt</label>
+                <textarea id="excerpt" name="excerpt" rows="3" required>{{ post.excerpt if post }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea id="content" name="content" rows="10" required>{{ post.content if post }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="author">Author</label>
+                <input type="text" id="author" name="author" value="{{ post.author if post }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="publish_date">Publish Date</label>
+                <input type="date" id="publish_date" name="publish_date" value="{{ post.publish_date.strftime('%Y-%m-%d') if post else datetime.now().strftime('%Y-%m-%d') }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Featured Image</label>
+                <input type="file" id="image" name="image" accept="image/*" {{ 'required' if not post }}>
+                {% if post %}
+                    <p>Current image: <a href="{{ post.image }}" target="_blank">{{ post.image }}</a></p>
+                {% endif %}
+            </div>
+            
+            <div class="form-group checkbox">
+                <input type="checkbox" id="is_published" name="is_published" {{ 'checked' if post and post.is_published }}>
+                <label for="is_published">Publish immediately</label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">{{ 'Update' if post else 'Create' }} Post</button>
+            <a href="{{ url_for('admin_blog') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </section>
+</article>
+{% endblock %}

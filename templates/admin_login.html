@@ -1,0 +1,42 @@
+<!-- admin_login.html -->
+{% extends "base.html" %}
+
+{% block title %}Admin Login - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Admin Login</h2>
+            
+            <p class="hero-text">
+                Access the admin dashboard with your credentials.
+            </p>
+        </div>
+    </section>
+
+    <section class="auth-form">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('admin_login') }}">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="pin">8-Digit PIN</label>
+                <input type="password" id="pin" name="pin" pattern="\d{8}" title="PIN must be exactly 8 digits" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </section>
+</article>
+{% endblock %}

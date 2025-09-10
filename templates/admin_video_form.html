@@ -1,0 +1,63 @@
+<!-- admin_video_form.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit' if video else 'New' }} Video - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">{{ 'Edit' if video else 'New' }} Video</h2>
+            
+            <p class="hero-text">
+                {{ 'Edit' if video else 'Add' }} a video to display on the homepage.
+            </p>
+        </div>
+    </section>
+
+    <section class="admin-form">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('admin_new_video') if not video else url_for('admin_edit_video', video_id=video.id) }}" >
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" value="{{ video.title if video }}" required style="border:solid black">
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3" style="border:solid black">{{ video.description if video }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="video_url">Video URL (YouTube embed URL)</label>
+                <input type="url" id="video_url" name="video_url" value="{{ video.video_url if video }}" required style="border:solid black">
+                <small>Example: https://www.youtube.com/embed/VIDEO_ID</small>
+            </div>
+            
+            <div class="form-group checkbox">
+                <input type="checkbox" id="is_active" name="is_active" {{ 'checked' if video and video.is_active }} style="border:solid black">
+                <label for="is_active">Display on homepage</label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">{{ 'Update' if video else 'Add' }} Video</button>
+            <a href="{{ url_for('admin_videos') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </section>
+</article>
+<style>
+    form{
+        color:black
+    }
+
+    .admin-content{
+        color:black;
+    }
+</style>
+{% endblock %}

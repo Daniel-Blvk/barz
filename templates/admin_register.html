@@ -1,0 +1,53 @@
+<!-- admin_register.html -->
+{% extends "base.html" %}
+
+{% block title %}Admin Registration - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Admin Registration</h2>
+            
+            <p class="hero-text">
+                Register as an admin. This can only be done once.
+            </p>
+        </div>
+    </section>
+
+    <section class="auth-form">
+        {% if admin_registered %}
+            <div class="alert alert-info">
+                Admin registration is closed. An admin already exists.
+            </div>
+        {% else %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" action="{{ url_for('admin_register') }}">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pin">8-Digit PIN</label>
+                    <input type="password" id="pin" name="pin" pattern="\d{8}" title="PIN must be exactly 8 digits" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm_pin">Confirm PIN</label>
+                    <input type="password" id="confirm_pin" name="confirm_pin" pattern="\d{8}" title="PIN must be exactly 8 digits" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        {% endif %}
+    </section>
+</article>
+{% endblock %}

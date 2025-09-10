@@ -1,0 +1,80 @@
+<!-- admin_episode_form.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit' if episode else 'New' }} Episode - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">{{ 'Edit' if episode else 'New' }} Episode</h2>
+            
+            <p class="hero-text">
+                {{ 'Edit' if episode else 'Create' }} a podcast episode.
+            </p>
+        </div>
+    </section>
+
+    <section class="admin-form">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('admin_new_episode') if not episode else url_for('admin_edit_episode', episode_id=episode.id) }}" enctype="multipart/form-data" style="color:black">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" value="{{ episode.title if episode }}" required style="border:solid black">
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="5" required style="border:solid black">{{ episode.description if episode }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="duration">Duration</label>
+                <input type="text" id="duration" name="duration" value="{{ episode.duration if episode }}" required style="border:solid black">
+                <small>Format: HH:MM:SS (e.g., 01:23:45)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="episode_number">Episode Number</label>
+                <input type="number" id="episode_number" name="episode_number" value="{{ episode.episode_number if episode }}" required min="1" style="border:solid black">
+            </div>
+            
+            <div class="form-group">
+                <label for="publish_date">Publish Date</label>
+                <input type="date" id="publish_date" name="publish_date" value="{{ episode.publish_date.strftime('%Y-%m-%d') if episode else datetime.now().strftime('%Y-%m-%d') }}" required style="border:solid black">
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Episode Image</label>
+                <input type="file" id="image" name="image" accept="image/*" {{ 'required' if not episode }} style="border:solid black">
+                {% if episode %}
+                    <p>Current image: <a href="{{ episode.image_url }}" target="_blank">{{ episode.image_url }}</a></p>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="audio">Audio File</label>
+                <input type="file" id="audio" name="audio" accept="audio/*" {{ 'required' if not episode }} style="border:solid black">
+                {% if episode %}
+                    <p>Current audio: <a href="{{ episode.audio_url }}" target="_blank">{{ episode.audio_url }}</a></p>
+                {% endif %}
+            </div>
+            
+            <div class="form-group checkbox">
+                <input type="checkbox" id="is_published" name="is_published" {{ 'checked' if episode and episode.is_published }} style="border:solid black">
+                <label for="is_published">Publish immediately</label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">{{ 'Update' if episode else 'Create' }} Episode</button>
+            <a href="{{ url_for('admin_episodes') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </section>
+</article>
+{% endblock %}

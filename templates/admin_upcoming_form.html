@@ -1,0 +1,56 @@
+<!-- admin_upcoming_form.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit' if upcoming else 'New' }} Upcoming Episode - {{ podcast.title }}{% endblock %}
+
+{% block content %}
+<article class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">{{ 'Edit' if upcoming else 'New' }} Upcoming Episode</h2>
+            
+            <p class="hero-text">
+                {{ 'Edit' if upcoming else 'Add' }} an upcoming episode.
+            </p>
+        </div>
+    </section>
+
+    <section class="admin-form">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('admin_new_upcoming') if not upcoming else url_for('admin_edit_upcoming', upcoming_id=upcoming.id) }}" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" value="{{ upcoming.title if upcoming }}" required style="border:solid black">
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="5" required style="border:solid black">{{ upcoming.description if upcoming }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="scheduled_date">Scheduled Date</label>
+                <input type="date" id="scheduled_date" name="scheduled_date" value="{{ upcoming.scheduled_date.strftime('%Y-%m-%d') if upcoming else datetime.now().strftime('%Y-%m-%d') }}" style="border:solid black" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Episode Image</label>
+                <input type="file" id="image" name="image" accept="image/*" {{ 'required' if not upcoming }} style="border:solid black">
+                {% if upcoming %}
+                    <p>Current image: <a href="{{ upcoming.image_url }}" target="_blank">{{ upcoming.image_url }}</a></p>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn btn-primary">{{ 'Update' if upcoming else 'Add' }} Upcoming Episode</button>
+            <a href="{{ url_for('admin_episodes') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </section>
+</article>
+{% endblock %}

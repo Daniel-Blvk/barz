@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ podcast.title if podcast and podcast.title else 'Micro Podcast' }}{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&family=Turret+Road:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="https://i.postimg.cc/kGnGvDrW/favicon.png" type="image/x-icon">
+</head>
+<body id="top">
+    <header class="active" data-header>
+        <div class="container">
+            <div class="overlay" data-overlay></div>
+            <a href="{{ url_for('homepage') }}" class="logo">
+                <img src="https://i.postimg.cc/Y0nrN3zw/logo.png" alt="Micro Logo">
+            </a>
+
+            <button class="nav-toggle-btn" data-nav-toggle-btn><ion-icon name="menu-outline"></ion-icon></button>
+
+            <!-- Add to base.html navbar -->
+<nav class="navbar" data-navbar>
+    <ul class="navbar-list">
+        <li class="navbar-item"><a href="{{ url_for('homepage') }}#hero" class="navbar-link">Home</a></li>
+        <li class="navbar-item"><a href="{{ url_for('homepage') }}#podcast" class="navbar-link">Podcast</a></li>
+        <li class="navbar-item"><a href="{{ url_for('host') }}" class="navbar-link">Host</a></li>
+        <li class="navbar-item"><a href="{{ url_for('blog') }}" class="navbar-link">Blog</a></li>
+        <li class="navbar-item"><a href="{{ url_for('contact') }}" class="navbar-link">Contact</a></li>
+        
+        {% if session.user_id %}
+            <li class="navbar-item"><a href="#" class="navbar-link">Hello, {{ session.username }}</a></li>
+            <li class="navbar-item"><a href="{{ url_for('logout') }}" class="navbar-link">Logout</a></li>
+        {% else %}
+            <li class="navbar-item"><a href="{{ url_for('login') }}" class="navbar-link">Login</a></li>
+            <li class="navbar-item"><a href="{{ url_for('register') }}" class="navbar-link">Register</a></li>
+        {% endif %}
+        
+        {% if session.admin_id %}
+            <li class="navbar-item"><a href="{{ url_for('admin_dashboard') }}" class="navbar-link">Admin</a></li>
+        {% endif %}
+    </ul>
+</nav>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-brand">
+                    <a href="{{ url_for('homepage') }}" class="logo">
+                        <img src="https://i.postimg.cc/Y0nrN3zw/logo.png" alt="Micro Logo">
+                    </a>
+
+                    <p class="footer-text">
+                        Micro is your daily dose of inspiration and knowledge. We bring together visionaries, experts, and storytellers to create compelling podcasts that educate, entertain, and spark meaningful conversations. Join our growing community of over 100,000 curious listeners.
+                    </p>
+                </div>
+
+                <div class="footer-list">
+                    <li><p class="footer-link-title">Start a Conversation</p></li>
+
+                    <li><a href="mailto:{{ contact_info.email if contact_info and contact_info.email else 'hello@micro.com' }}" class="footer-link">{{ contact_info.email if contact_info and contact_info.email else 'hello@micro.com' }}</a></li>
+                    <li><a href="tel:{{ contact_info.phone if contact_info and contact_info.phone else '+1234567890' }}" class="footer-link">{{ contact_info.phone if contact_info and contact_info.phone else '+123 456 7890' }}</a></li>
+                    <li><a href="tel:{{ contact_info.phone2 if contact_info and contact_info.phone2 else '+15780346789' }}" class="footer-link">{{ contact_info.phone2 if contact_info and contact_info.phone2 else '+1 (578) 034-6789' }}</a></li>
+                </div>
+
+                <div class="social-list-box">
+                    <p class="social-title">Follow us on:</p>
+
+                    <ul class="social-list">
+                        <li><a href="{{ social_links.facebook if social_links and social_links.facebook else '#' }}" class="social-link"><ion-icon name="logo-facebook"></ion-icon></a></li>
+                        <li><a href="{{ social_links.twitter if social_links and social_links.twitter else '#' }}" class="social-link"><ion-icon name="logo-twitter"></ion-icon></a></li>
+                        <li><a href="{{ social_links.instagram if social_links and social_links.instagram else '#' }}" class="social-link"><ion-icon name="logo-instagram"></ion-icon></a></li>
+                        <li><a href="{{ social_links.soundcloud if social_links and social_links.soundcloud else '#' }}" class="social-link"><ion-icon name="logo-soundcloud"></ion-icon></a></li>
+                        <li><a href="{{ social_links.apple_podcasts if social_links and social_links.apple_podcasts else '#' }}" class="social-link"><ion-icon name="logo-apple"></ion-icon></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="copyright">&copy; <a href="#">ULTRA CODE</a>. All rights reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#top" class="go-top" data-go-top><ion-icon name="chevron-up-outline"></ion-icon></a>
+    
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
