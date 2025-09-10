@@ -12,20 +12,22 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-# Apply configuration from config.py
-app.config['DEBUG'] = config.APP_CONFIG['DEBUG']
-app.config['SECRET_KEY'] = config.APP_CONFIG['SECRET_KEY']
+# Load configuration from environment variables
+app.config['DEBUG'] = os.environ.get('FLASK_ENV') == 'development' # Will be False in production
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
-# Database configuration - PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = config.DATABASE_CONFIG['URI']
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = config.DATABASE_CONFIG['TRACK_MODIFICATIONS']
+# Database configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # File upload configuration
-app.config['UPLOAD_FOLDER'] = config.UPLOAD_CONFIG['UPLOAD_FOLDER']
-app.config['MAX_CONTENT_LENGTH'] = config.UPLOAD_CONFIG['MAX_FILE_SIZE']
-app.config['ALLOWED_EXTENSIONS'] = config.UPLOAD_CONFIG['ALLOWED_EXTENSIONS']
+app.config['UPLOAD_FOLDER'] = os.environ.get('UPLOAD_FOLDER', 'static/uploads')
+# Use a default fallback if variable is missing, then convert to int
+app.config['MAX_CONTENT_LENGTH'] = int(os.environ.get('MAX_CONTENT_LENGTH', '50777216')) 
+# Get comma-separated string, then convert to a set of extensions
+app.config['ALLOWED_EXTENSIONS'] = set(os.environ.get('ALLOWED_EXTENSIONS', 'png,jpg,jpeg,gif,mp3,wav,m4a').split(',')) 
 
-# db = SQLAlchemy(app)
+
 # migrate = Migrate(app, db)  # Initialize Flask-Migrate
 
 
