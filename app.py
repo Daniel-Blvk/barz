@@ -986,7 +986,9 @@ def admin_toggle_message_read_alt(message_id):  # Changed function name
     return redirect(url_for('admin_messages'))
 
 
-
+@app.route('/health')
+def health_check():
+    return '', 200
 
 
 
